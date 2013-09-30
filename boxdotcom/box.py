@@ -6,6 +6,22 @@ class BaseBoxDotCom(BaseApiClient):
     base_uri = 'https://api.box.com/2.0/'
 
 
+class AuthenticationMixin():
+    """
+    Oauth2 Authentication Mixin
+    """
+    request_token_url = 'https://www.box.com/api/oauth2/token'
+    access_token_url = 'https://www.box.com/api/oauth2/token'
+    authorize_url = 'https://www.box.com/api/oauth2/authorize'
+
+    client_id = None
+    client_secret = None
+    access_token = None
+
+    state = None
+    grant_type = None
+
+
 class BoxDotComService(BaseBoxDotCom):
     params = {}
     signers = []

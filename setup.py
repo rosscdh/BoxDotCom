@@ -9,13 +9,14 @@ setup(
     packages=['boxdotcom'],
     include_package_data=True,
     url='https://github.com/rosscdh/BoxDotComApi',
-    description='Module for interacting with the BoxDotCom service',
+    description='Module for interacting with the BoxDotCom v2 api',
     long_description=open('README.md').read(),
     zip_safe=False,
     install_requires=[
-        'WTForms==1.0.2',
-        'requests==1.1.0',
-        'nose==1.2.1',
+        'WTForms',
+        'requests',
+        'nose',
+        'python-oauth2',
         'querystring-parser',
         'mocktest'
      ]

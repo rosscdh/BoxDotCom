@@ -10,6 +10,8 @@ class AuthenticationMixin():
     """
     Oauth2 Authentication Mixin
     """
+    client_authentication_redirect_url = None
+
     request_token_url = 'https://www.box.com/api/oauth2/token'
     access_token_url = 'https://www.box.com/api/oauth2/token'
     authorize_url = 'https://www.box.com/api/oauth2/authorize'
@@ -22,7 +24,7 @@ class AuthenticationMixin():
     grant_type = None
 
 
-class BoxDotComService(BaseBoxDotCom):
+class BoxDotComService(AuthenticationMixin, BaseBoxDotCom):
     params = {}
     signers = []
     docs = []

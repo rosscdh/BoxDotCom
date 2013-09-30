@@ -4,9 +4,9 @@ from mocktest import *
 import requests
 import json
 
-from hellosign import BaseApiClient
-from hellosign import HelloSign, HelloSignSignature
-from hellosign import HelloSigner, HelloDoc
+from boxdotcom import BaseApiClient
+from boxdotcom import BoxDotCom, BoxDotComSignature
+from boxdotcom import BoxDotComer, HelloDoc
 
 
 class TestCase(mocktest.TestCase):
@@ -17,7 +17,7 @@ class TestCase(mocktest.TestCase):
 
         when(self.subject).get().then_return({})
 
-    def test_hellosignclient_init(self):
+    def test_boxdotcomclient_init(self):
         eq_(self.subject.base_uri, self.test_uri)
 
     def test_client_baseuri_path(self):
@@ -25,29 +25,29 @@ class TestCase(mocktest.TestCase):
         eq_(self.subject.url, 'http://example.com/go/to/this/path')
 
 
-class TestHelloSign(mocktest.TestCase):
+class TestBoxDotCom(mocktest.TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
         self.auth = ('monkey', 'password')
-        self.subject = HelloSign(base_uri=self.test_uri)
+        self.subject = BoxDotCom(base_uri=self.test_uri)
 
-    def test_hellosign_init(self):
+    def test_boxdotcom_init(self):
         eq_(self.subject.base_uri, self.test_uri)
 
-    def test_hellosign(self):
-        subject = HelloSign()
-        eq_(subject.base_uri, 'https://api.hellosign.com/v3/')
+    def test_boxdotcom(self):
+        subject = BoxDotCom()
+        eq_(subject.base_uri, 'https://api.boxdotcom.com/v3/')
 
 
-class TestHelloSigner(mocktest.TestCase):
+class TestBoxDotComer(mocktest.TestCase):
     def setUp(self):
-        self.subject = HelloSigner(email='bob@example.com', name='Bob Examplar')
+        self.subject = BoxDotComer(email='bob@example.com', name='Bob Examplar')
 
     def test_IsValid(self):
         assert self.subject.validate() == True
 
     def test_InValid(self):
-        subject = HelloSigner(**{'email':'bob', 'name': 'Bob Examplar'})
+        subject = BoxDotComer(**{'email':'bob', 'name': 'Bob Examplar'})
         assert subject.validate() == False
 
 
@@ -66,27 +66,27 @@ class TestHelloDoc(mocktest.TestCase):
         assert subject.validate() == False
 
 
-class TestHelloSignSignature(mocktest.TestCase):
+class TestBoxDotComSignature(mocktest.TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
         self.auth = ('monkey', 'password')
 
     def test_InvalidSignature(self):
-        self.assertRaises(TypeError, lambda: HelloSignSignature(base_uri=self.test_uri))
+        self.assertRaises(TypeError, lambda: BoxDotComSignature(base_uri=self.test_uri))
 
     def test_SignatureExceptions(self):
-        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        subject = BoxDotComSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
     
         assert subject.base_uri == self.test_uri
     
         self.assertRaises(AttributeError, lambda: subject.create())
-        subject.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
+        subject.add_signer(BoxDotComer(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
     
         self.assertRaises(AttributeError, lambda: subject.create())
         subject.add_doc(HelloDoc(file_path='@filename.pdf'))
 
     def test_SignatureSend(self):
-        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        subject = BoxDotComSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
         when(subject).create(auth=self.auth).then_return({})
         # Test basic params
         assert subject.base_uri == self.test_uri
@@ -99,7 +99,7 @@ class TestHelloSignSignature(mocktest.TestCase):
         self.assertRaises(Exception, lambda: subject.add_doc({}))
 
         # add correct signers and doc types and test the lengths increase
-        subject.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
+        subject.add_signer(BoxDotComer(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
         subject.add_doc(HelloDoc(file_path='@filename.pdf'))
         self.assertEqual(len(subject.signers), 1)
         self.assertEqual(len(subject.docs), 1)
@@ -108,18 +108,18 @@ class TestHelloSignSignature(mocktest.TestCase):
         self.assertEqual(response, {})
 
     def test_ValidSignatureData(self):
-        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        subject = BoxDotComSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
         when(subject).create(auth=self.auth).then_return({})
     
-        subject.add_signer(HelloSigner(email='bob@example.com', name='Bob Examplar'))
+        subject.add_signer(BoxDotComer(email='bob@example.com', name='Bob Examplar'))
         subject.add_doc(HelloDoc(file_path='@filename.pdf'))
     
         json_data = json.dumps(subject.data())
         self.assertEqual(json_data, '{"title": "title", "signers[0][name]": "Bob Examplar", "signers[0][email_address]": "bob@example.com", "message": "My Message", "subject": "My Subject"}')
 
     def test_InValidSignatureData(self):
-        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        subject = BoxDotComSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
         when(subject).create(auth=self.auth).then_return({})
 
-        self.assertRaises(Exception, lambda: subject.add_signer(HelloSigner(**{'email':'bob_no_email'})))
+        self.assertRaises(Exception, lambda: subject.add_signer(BoxDotComer(**{'email':'bob_no_email'})))
         self.assertRaises(Exception, lambda: subject.add_doc(HelloDoc(**{'noob': ''})))

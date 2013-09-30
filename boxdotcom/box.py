@@ -1,12 +1,12 @@
 from .api import BaseApiClient
-from .hello_objects import HelloSigner, HelloDoc
+from .hello_objects import BoxDocument
 
 
-class HelloSign(BaseApiClient):
-    base_uri = 'https://api.hellosign.com/v3/'
+class BaseBoxDotCom(BaseApiClient):
+    base_uri = 'https://api.box.com/2.0/'
 
 
-class HelloSignSignature(HelloSign):
+class BoxDotComService(BaseBoxDotCom):
     params = {}
     signers = []
     docs = []
@@ -21,31 +21,19 @@ class HelloSignSignature(HelloSign):
         self.params['subject'] = subject
         self.params['message'] = message
 
-        super(HelloSignSignature, self).__init__(*args, **kwargs)
-
-    def add_signer(self, signer):
-        """ Simple dict of {'name': 'John Doe', 'email': 'name@example.com'}"""
-        if isinstance(signer, HelloSigner) and signer.validate():
-            self.signers.append(signer)
-        else:
-            if not signer.validate():
-                raise Exception("HelloSigner Errors %s" % (signers.errors,))
-            else:
-                raise Exception("add_signer signer must be an instance of class HelloSigner")
+        super(BoxDotComService, self).__init__(*args, **kwargs)
 
     def add_doc(self, doc):
         """ Simple dict of {'name': '@filename.pdf'}"""
-        if isinstance(doc, HelloDoc) and doc.validate():
+        if isinstance(doc, BoxDocument) and doc.validate():
             self.docs.append(doc)
         else:
             if not doc.validate():
-                raise Exception("HelloDoc Errors %s" % (doc.errors,))
+                raise Exception("BoxDocument Errors %s" % (doc.errors,))
             else:
-                raise Exception("add_doc doc must be an instance of class HelloDoc")
+                raise Exception("add_doc doc must be an instance of class BoxDocument")
 
     def validate(self):
-        if len(self.signers) == 0:
-            raise AttributeError('You need to specify at least 1 person as a signer')
         if len(self.docs) == 0:
             raise AttributeError('You need to specify at least 1 document')
 

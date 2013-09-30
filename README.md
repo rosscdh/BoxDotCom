@@ -1,7 +1,7 @@
-HelloSignApi
+BoxDotComApi
 ============
 
-Basic Api Objects for accessing the HelloSign.com Api
+Basic Api Objects for accessing the BoxDotCom.com v2 Api
 
 Makes use of the excellent requests, WTForms, nosetests and mocktests libs.
 
@@ -16,33 +16,33 @@ Installation
 
 Into your virtualenv or system env:
 
-    git clone https://github.com/stard0g101/HelloSignApi.git
-    cd HelloSignApi
+    git clone https://github.com/rosscdh/BoxDotComApi.git
+    cd BoxDotComApi
     python setup.py install
 
 or manually:
 
-    git clone https://github.com/stard0g101/HelloSignApi.git
-    cd HelloSignApi
+    git clone https://github.com/rosscdh/BoxDotComApi.git
+    cd BoxDotComApi
     pip install -r requirements.txt
 
 
 Usage
 ============
 
-    from hellosign import HelloSign, HelloSignSignature
-    from hellosign import HelloSigner, HelloDoc
+    from boxdotcom import BoxDotCom, BoxDotComSignature
+    from boxdotcom import BoxDocument
 
     authentication = ("username@example.com", "secret_password")
 
     # Basic Api usage - query is built around the api path i.e: /v3/interesting/feature would be api.interesting.feature.get(auth=authentication)
-    api = HelloSign()
+    api = BoxDotCom()
     account_info = api.account.get(auth=authentication)
     print account_info
 
     # Signature Example - most complete example, with validation of input
-    signature = HelloSignSignature(title='title', subject='My Subject', message='My Message')
-    signature.add_signer(HelloSigner(email='bob@example.com', name='Bob Examplar'))
+    signature = BoxDotComSignature(title='title', subject='My Subject', message='My Message')
+    signature.add_signer(BoxDotComer(email='bob@example.com', name='Bob Examplar'))
     signature.add_doc(HelloDoc(file_path='/path/to/file/filename.pdf'))
     signature.create(auth=authentication)
 
@@ -52,8 +52,8 @@ Usage
 
     # Create with a reuseable form - simple POST example, no validation (coming soon)
     params = {
-    'param_as_defined': 'by_the_hellosign_documentation',
-    'param_as_defined': 'by_the_hellosign_documentation',
+    'param_as_defined': 'by_the_boxdotcom_documentation',
+    'param_as_defined': 'by_the_boxdotcom_documentation',
     }
     form_list = api.signature_request.send_with_reusable_form.post(auth=authentication, **params)
 
